@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backends", "Backends", "{BE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.Commerce.Services.MetaField.Backends.InMemory", "src\LightOps.Commerce.Services.MetaField.Backends.InMemory\LightOps.Commerce.Services.MetaField.Backends.InMemory.csproj", "{6312C458-7D99-45B4-9AFC-F443BE204543}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{90ABFD61-36A4-480B-BD1D-C01AF931827E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.MetaFieldService", "samples\Sample.MetaFieldService\Sample.MetaFieldService.csproj", "{A114B890-AC80-4E73-92E6-D7A96124B1B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +27,17 @@ Global
 		{6312C458-7D99-45B4-9AFC-F443BE204543}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6312C458-7D99-45B4-9AFC-F443BE204543}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6312C458-7D99-45B4-9AFC-F443BE204543}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A114B890-AC80-4E73-92E6-D7A96124B1B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A114B890-AC80-4E73-92E6-D7A96124B1B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A114B890-AC80-4E73-92E6-D7A96124B1B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A114B890-AC80-4E73-92E6-D7A96124B1B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6312C458-7D99-45B4-9AFC-F443BE204543} = {BE4D1101-4F6D-4499-BE04-D9456B714D90}
+		{A114B890-AC80-4E73-92E6-D7A96124B1B5} = {90ABFD61-36A4-480B-BD1D-C01AF931827E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6E206EA7-E102-4630-8904-2049DD7076D8}
