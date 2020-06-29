@@ -4,8 +4,6 @@ package service.meta_field.v1;
 
 option csharp_namespace = "LightOps.Commerce.Proto.Services.MetaField.V1";
 
-import "google/protobuf/wrappers.proto";
-
 /*************
  * Models
  *************/
