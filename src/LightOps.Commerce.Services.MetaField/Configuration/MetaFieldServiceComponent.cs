@@ -4,6 +4,7 @@ using LightOps.Commerce.Services.MetaField.Api.Models;
 using LightOps.Commerce.Services.MetaField.Api.Queries;
 using LightOps.Commerce.Services.MetaField.Api.QueryHandlers;
 using LightOps.Commerce.Services.MetaField.Api.Services;
+using LightOps.Commerce.Services.MetaField.Domain.Mappers.V1;
 using LightOps.Commerce.Services.MetaField.Domain.Services;
 using LightOps.CQRS.Api.Queries;
 using LightOps.DependencyInjection.Api.Configuration;
@@ -57,11 +58,20 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
         #region Mappers
         internal enum Mappers
         {
+            ProtoMetaFieldMapperV1,
         }
 
         private readonly Dictionary<Mappers, ServiceRegistration> _mappers = new Dictionary<Mappers, ServiceRegistration>
         {
+            [Mappers.ProtoMetaFieldMapperV1] = ServiceRegistration
+                .Scoped<IMapper<IMetaField, Proto.Services.MetaField.V1.ProtoMetaField>, ProtoMetaFieldMapper>(),
         };
+
+        public IMetaFieldServiceComponent OverrideProtoMetaFieldMapperV1<T>() where T : IMapper<IMetaField, Proto.Services.MetaField.V1.ProtoMetaField>
+        {
+            _mappers[Mappers.ProtoMetaFieldMapperV1].ImplementationType = typeof(T);
+            return this;
+        }
         #endregion Mappers
 
         #region Query Handlers

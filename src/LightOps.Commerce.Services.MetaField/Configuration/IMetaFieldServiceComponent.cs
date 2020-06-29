@@ -12,6 +12,10 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
         IMetaFieldServiceComponent OverrideMetaFieldService<T>() where T : IMetaFieldService;
         #endregion Services
 
+        #region Mappers
+        IMetaFieldServiceComponent OverrideProtoMetaFieldMapperV1<T>() where T : IMapper<IMetaField, Proto.Services.MetaField.V1.ProtoMetaField>;
+        #endregion Mappers
+
         #region Query Handlers
         IMetaFieldServiceComponent OverrideCheckMetaFieldHealthQueryHandler<T>() where T : ICheckMetaFieldHealthQueryHandler;
         IMetaFieldServiceComponent OverrideIFetchMetaFieldByParentQueryHandler<T>() where T : IFetchMetaFieldByParentQueryHandler;
