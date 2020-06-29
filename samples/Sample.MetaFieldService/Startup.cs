@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LightOps.Commerce.Services.MetaField.Backends.InMemory.Configuration;
 using LightOps.Commerce.Services.MetaField.Configuration;
+using LightOps.Commerce.Services.MetaField.Domain.Services.V1;
 using LightOps.CQRS.Configuration;
 using LightOps.DependencyInjection.Configuration;
 using LightOps.Mapping.Configuration;
@@ -58,6 +59,9 @@ namespace Sample.MetaFieldService
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGrpcService<HealthGrpcService>();
+                endpoints.MapGrpcService<MetaFieldGrpcService>();
+
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Sample MetaFieldService. Communication must be made through a gRPC client.");
