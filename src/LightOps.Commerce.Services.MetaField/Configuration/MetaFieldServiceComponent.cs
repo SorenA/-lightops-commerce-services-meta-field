@@ -36,8 +36,8 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
 
         private readonly Dictionary<Services, ServiceRegistration> _services = new Dictionary<Services, ServiceRegistration>
         {
-            [Services.HealthService] = ServiceRegistration.Scoped<IHealthService, HealthService>(),
-            [Services.MetaFieldService] = ServiceRegistration.Scoped<IMetaFieldService, MetaFieldService>(),
+            [Services.HealthService] = ServiceRegistration.Transient<IHealthService, HealthService>(),
+            [Services.MetaFieldService] = ServiceRegistration.Transient<IMetaFieldService, MetaFieldService>(),
         };
 
         public IMetaFieldServiceComponent OverrideHealthService<T>()
@@ -64,7 +64,7 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
         private readonly Dictionary<Mappers, ServiceRegistration> _mappers = new Dictionary<Mappers, ServiceRegistration>
         {
             [Mappers.ProtoMetaFieldMapperV1] = ServiceRegistration
-                .Scoped<IMapper<IMetaField, Proto.Services.MetaField.V1.ProtoMetaField>, ProtoMetaFieldMapper>(),
+                .Transient<IMapper<IMetaField, Proto.Services.MetaField.V1.ProtoMetaField>, ProtoMetaFieldMapper>(),
         };
 
         public IMetaFieldServiceComponent OverrideProtoMetaFieldMapperV1<T>() where T : IMapper<IMetaField, Proto.Services.MetaField.V1.ProtoMetaField>
@@ -84,9 +84,9 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
 
         private readonly Dictionary<QueryHandlers, ServiceRegistration> _queryHandlers = new Dictionary<QueryHandlers, ServiceRegistration>
         {
-            [QueryHandlers.CheckMetaFieldHealthQueryHandler] = ServiceRegistration.Scoped<IQueryHandler<CheckMetaFieldHealthQuery, HealthStatus>>(),
-            [QueryHandlers.FetchMetaFieldByParentQueryHandler] = ServiceRegistration.Scoped<IQueryHandler<FetchMetaFieldByParentQuery, IMetaField>>(),
-            [QueryHandlers.FetchMetaFieldsByParentQueryHandler] = ServiceRegistration.Scoped<IQueryHandler<FetchMetaFieldsByParentQuery, IList<IMetaField>>>(),
+            [QueryHandlers.CheckMetaFieldHealthQueryHandler] = ServiceRegistration.Transient<IQueryHandler<CheckMetaFieldHealthQuery, HealthStatus>>(),
+            [QueryHandlers.FetchMetaFieldByParentQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldByParentQuery, IMetaField>>(),
+            [QueryHandlers.FetchMetaFieldsByParentQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByParentQuery, IList<IMetaField>>>(),
         };
 
         public IMetaFieldServiceComponent OverrideCheckMetaFieldHealthQueryHandler<T>() where T : ICheckMetaFieldHealthQueryHandler
