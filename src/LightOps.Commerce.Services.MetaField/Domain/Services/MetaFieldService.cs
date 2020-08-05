@@ -16,22 +16,29 @@ namespace LightOps.Commerce.Services.MetaField.Domain.Services
             _queryDispatcher = queryDispatcher;
         }
         
-        public Task<IMetaField> GetByParentAsync(string parentEntityType, string parentEntityId, string name)
+        public Task<IList<IMetaField>> GetByIdAsync(IList<string> ids)
         {
-            return _queryDispatcher.DispatchAsync<FetchMetaFieldByParentQuery, IMetaField>(new FetchMetaFieldByParentQuery
+            return _queryDispatcher.DispatchAsync<FetchMetaFieldsByIdsQuery, IList<IMetaField>>(new FetchMetaFieldsByIdsQuery
             {
-                ParentEntityType = parentEntityType,
-                ParentEntityId = parentEntityId,
-                Name = name,
+                Ids = ids,
             });
         }
 
-        public Task<IList<IMetaField>> GetByParentAsync(string parentEntityType, string parentEntityId)
+        public Task<IDictionary<string, IList<IMetaField>>> GetByParentIdsAsync(IList<string> parentIds)
         {
-            return _queryDispatcher.DispatchAsync<FetchMetaFieldsByParentQuery, IList<IMetaField>>(new FetchMetaFieldsByParentQuery
+            return _queryDispatcher.DispatchAsync<FetchMetaFieldsByParentIdsQuery, IDictionary<string, IList<IMetaField>>>(new FetchMetaFieldsByParentIdsQuery
             {
-                ParentEntityType = parentEntityType,
-                ParentEntityId = parentEntityId,
+                ParentIds = parentIds,
+            });
+        }
+
+        public Task<IList<IMetaField>> GetBySearchAsync(string parentId, string @namespace, string name)
+        {
+            return _queryDispatcher.DispatchAsync<FetchMetaFieldsBySearchQuery, IList<IMetaField>>(new FetchMetaFieldsBySearchQuery
+            {
+                ParentId = parentId,
+                Namespace = @namespace,
+                Name = name,
             });
         }
     }

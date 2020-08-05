@@ -5,7 +5,7 @@ using LightOps.CQRS.Api.Queries;
 
 namespace LightOps.Commerce.Services.MetaField.Api.QueryHandlers
 {
-    public interface IFetchMetaFieldsByParentQueryHandler : IQueryHandler<FetchMetaFieldsByParentQuery, IList<IMetaField>>
+    public interface IFetchMetaFieldsByParentIdsQueryHandler : IQueryHandler<FetchMetaFieldsByParentIdsQuery, IDictionary<string, IList<IMetaField>>>
     {
 
     }

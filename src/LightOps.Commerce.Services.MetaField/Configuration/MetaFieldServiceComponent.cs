@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using LightOps.Commerce.Proto.Types;
 using LightOps.Commerce.Services.MetaField.Api.Models;
 using LightOps.Commerce.Services.MetaField.Api.Queries;
 using LightOps.Commerce.Services.MetaField.Api.QueryHandlers;
 using LightOps.Commerce.Services.MetaField.Api.Services;
-using LightOps.Commerce.Services.MetaField.Domain.Mappers.V1;
+using LightOps.Commerce.Services.MetaField.Domain.Mappers;
 using LightOps.Commerce.Services.MetaField.Domain.Services;
 using LightOps.CQRS.Api.Queries;
 using LightOps.DependencyInjection.Api.Configuration;
@@ -58,18 +59,17 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
         #region Mappers
         internal enum Mappers
         {
-            ProtoMetaFieldMapperV1,
+            MetaFieldProtoMapper,
         }
 
         private readonly Dictionary<Mappers, ServiceRegistration> _mappers = new Dictionary<Mappers, ServiceRegistration>
         {
-            [Mappers.ProtoMetaFieldMapperV1] = ServiceRegistration
-                .Transient<IMapper<IMetaField, Proto.Services.MetaField.V1.ProtoMetaField>, ProtoMetaFieldMapper>(),
+            [Mappers.MetaFieldProtoMapper] = ServiceRegistration.Transient<IMapper<IMetaField, MetaFieldProto>, MetaFieldProtoMapper>(),
         };
 
-        public IMetaFieldServiceComponent OverrideProtoMetaFieldMapperV1<T>() where T : IMapper<IMetaField, Proto.Services.MetaField.V1.ProtoMetaField>
+        public IMetaFieldServiceComponent OverrideMetaFieldProtoMapper<T>() where T : IMapper<IMetaField, MetaFieldProto>
         {
-            _mappers[Mappers.ProtoMetaFieldMapperV1].ImplementationType = typeof(T);
+            _mappers[Mappers.MetaFieldProtoMapper].ImplementationType = typeof(T);
             return this;
         }
         #endregion Mappers
@@ -78,15 +78,17 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
         internal enum QueryHandlers
         {
             CheckMetaFieldHealthQueryHandler,
-            FetchMetaFieldByParentQueryHandler,
-            FetchMetaFieldsByParentQueryHandler,
+            FetchMetaFieldsByIdsQueryHandler,
+            FetchMetaFieldsByParentIdsQueryHandler,
+            FetchMetaFieldsBySearchQueryHandler,
         }
 
         private readonly Dictionary<QueryHandlers, ServiceRegistration> _queryHandlers = new Dictionary<QueryHandlers, ServiceRegistration>
         {
             [QueryHandlers.CheckMetaFieldHealthQueryHandler] = ServiceRegistration.Transient<IQueryHandler<CheckMetaFieldHealthQuery, HealthStatus>>(),
-            [QueryHandlers.FetchMetaFieldByParentQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldByParentQuery, IMetaField>>(),
-            [QueryHandlers.FetchMetaFieldsByParentQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByParentQuery, IList<IMetaField>>>(),
+            [QueryHandlers.FetchMetaFieldsByIdsQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByIdsQuery, IMetaField>>(),
+            [QueryHandlers.FetchMetaFieldsByParentIdsQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByParentIdsQuery, IDictionary<string, IMetaField>>>(),
+            [QueryHandlers.FetchMetaFieldsBySearchQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsBySearchQuery, IList<IMetaField>>>(),
         };
 
         public IMetaFieldServiceComponent OverrideCheckMetaFieldHealthQueryHandler<T>() where T : ICheckMetaFieldHealthQueryHandler
@@ -95,15 +97,21 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
             return this;
         }
 
-        public IMetaFieldServiceComponent OverrideIFetchMetaFieldByParentQueryHandler<T>() where T : IFetchMetaFieldByParentQueryHandler
+        public IMetaFieldServiceComponent OverrideFetchMetaFieldsByIdsQueryHandler<T>() where T : IFetchMetaFieldsByIdsQueryHandler
         {
-            _queryHandlers[QueryHandlers.FetchMetaFieldByParentQueryHandler].ImplementationType = typeof(T);
+            _queryHandlers[QueryHandlers.FetchMetaFieldsByIdsQueryHandler].ImplementationType = typeof(T);
             return this;
         }
 
-        public IMetaFieldServiceComponent OverrideIFetchMetaFieldsByParentQueryHandler<T>() where T : IFetchMetaFieldsByParentQueryHandler
+        public IMetaFieldServiceComponent OverrideFetchMetaFieldsByParentIdsQueryHandler<T>() where T : IFetchMetaFieldsByParentIdsQueryHandler
         {
-            _queryHandlers[QueryHandlers.FetchMetaFieldsByParentQueryHandler].ImplementationType = typeof(T);
+            _queryHandlers[QueryHandlers.FetchMetaFieldsByParentIdsQueryHandler].ImplementationType = typeof(T);
+            return this;
+        }
+
+        public IMetaFieldServiceComponent OverrideFetchMetaFieldsBySearchQueryHandler<T>() where T : IFetchMetaFieldsBySearchQueryHandler
+        {
+            _queryHandlers[QueryHandlers.FetchMetaFieldsBySearchQueryHandler].ImplementationType = typeof(T);
             return this;
         }
         #endregion Query Handlers

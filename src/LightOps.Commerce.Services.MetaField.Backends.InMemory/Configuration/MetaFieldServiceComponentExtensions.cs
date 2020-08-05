@@ -23,8 +23,9 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Configuration
             // Override query handlers
             serviceComponent
                 .OverrideCheckMetaFieldHealthQueryHandler<CheckMetaFieldHealthQueryHandler>()
-                .OverrideIFetchMetaFieldByParentQueryHandler<FetchMetaFieldByParentQueryHandler>()
-                .OverrideIFetchMetaFieldsByParentQueryHandler<FetchMetaFieldsByParentQueryHandler>();
+                .OverrideFetchMetaFieldsByIdsQueryHandler<FetchMetaFieldsByIdsQueryHandler>()
+                .OverrideFetchMetaFieldsByParentIdsQueryHandler<FetchMetaFieldsByParentIdsQueryHandler>()
+                .OverrideFetchMetaFieldsBySearchQueryHandler<FetchMetaFieldsBySearchQueryHandler>();
 
             return serviceComponent;
         }
