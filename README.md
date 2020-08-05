@@ -17,9 +17,9 @@ Provides gRPC services for integrations into other services.
 
 Protobuf service definitions located at [SorenA/lightops-commerce-proto](https://github.com/SorenA/lightops-commerce-proto).
 
-Meta Field v1 is implemented in `Domain.Services.V1.MetaFieldGrpcService`.
+Meta Field is implemented in `Domain.Services.Grpc.MetaFieldGrpcService`.
 
-Health v1 is implemented in `Domain.Services.V1.HealthGrpcService`.
+Health is implemented in `Domain.Services.Grpc.HealthGrpcService`.
 
 ### Health-check
 
@@ -29,7 +29,7 @@ Available services are as follows
 
 ```bash
 service = '' - System as a whole
-service = 'service.meta_field.v1.ProtoMetaFieldService' - MetaFieldPage v1
+service = 'lightops.service.MetaFieldProtoService' - MetaFieldPage
 ```
 
 For embedding a gRPC client for use with Kubernetes, see [grpc-ecosystem/grpc-health-probe](https://github.com/grpc-ecosystem/grpc-health-probe)
@@ -99,13 +99,14 @@ public interface IMetaFieldServiceComponent
     #endregion Services
 
     #region Mappers
-    IMetaFieldServiceComponent OverrideProtoMetaFieldMapperV1<T>() where T : IMapper<IMetaField, Proto.Services.MetaField.V1.ProtoMetaField>;
+    IMetaFieldServiceComponent OverrideMetaFieldProtoMapper<T>() where T : IMapper<IMetaField, MetaFieldProto>;
     #endregion Mappers
 
     #region Query Handlers
     IMetaFieldServiceComponent OverrideCheckMetaFieldHealthQueryHandler<T>() where T : ICheckMetaFieldHealthQueryHandler;
-    IMetaFieldServiceComponent OverrideIFetchMetaFieldByParentQueryHandler<T>() where T : IFetchMetaFieldByParentQueryHandler;
-    IMetaFieldServiceComponent OverrideIFetchMetaFieldsByParentQueryHandler<T>() where T : IFetchMetaFieldsByParentQueryHandler;
+    IMetaFieldServiceComponent OverrideFetchMetaFieldsByIdsQueryHandler<T>() where T : IFetchMetaFieldsByIdsQueryHandler;
+    IMetaFieldServiceComponent OverrideFetchMetaFieldsByParentIdsQueryHandler<T>() where T : IFetchMetaFieldsByParentIdsQueryHandler;
+    IMetaFieldServiceComponent OverrideFetchMetaFieldsBySearchQueryHandler<T>() where T : IFetchMetaFieldsBySearchQueryHandler;
     #endregion Query Handlers
 }
 ```
