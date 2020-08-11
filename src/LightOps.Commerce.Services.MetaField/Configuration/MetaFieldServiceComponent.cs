@@ -86,8 +86,8 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
         private readonly Dictionary<QueryHandlers, ServiceRegistration> _queryHandlers = new Dictionary<QueryHandlers, ServiceRegistration>
         {
             [QueryHandlers.CheckMetaFieldHealthQueryHandler] = ServiceRegistration.Transient<IQueryHandler<CheckMetaFieldHealthQuery, HealthStatus>>(),
-            [QueryHandlers.FetchMetaFieldsByIdsQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByIdsQuery, IMetaField>>(),
-            [QueryHandlers.FetchMetaFieldsByParentIdsQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByParentIdsQuery, IDictionary<string, IMetaField>>>(),
+            [QueryHandlers.FetchMetaFieldsByIdsQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByIdsQuery, IList<IMetaField>>>(),
+            [QueryHandlers.FetchMetaFieldsByParentIdsQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByParentIdsQuery, IDictionary<string, IList<IMetaField>>>>(),
             [QueryHandlers.FetchMetaFieldsBySearchQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsBySearchQuery, IList<IMetaField>>>(),
         };
 
