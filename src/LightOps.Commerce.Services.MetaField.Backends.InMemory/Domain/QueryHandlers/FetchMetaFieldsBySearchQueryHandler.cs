@@ -19,8 +19,9 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.QueryHan
 
         public Task<IList<IMetaField>> HandleAsync(FetchMetaFieldsBySearchQuery query)
         {
-            var inMemoryQuery = _inMemoryMetaFieldProvider.MetaFields
-                .AsQueryable();
+            var inMemoryQuery = _inMemoryMetaFieldProvider
+                .MetaFields?
+                .AsQueryable() ?? new EnumerableQuery<IMetaField>(new List<IMetaField>());
 
             // Match parent id if requested
             if (!string.IsNullOrEmpty(query.ParentId))

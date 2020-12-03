@@ -20,11 +20,11 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.QueryHan
         public Task<IList<IMetaField>> HandleAsync(FetchMetaFieldsByIdsQuery query)
         {
             var metaFields = _inMemoryMetaFieldProvider
-                .MetaFields
+                .MetaFields?
                 .Where(c => query.Ids.Contains(c.Id))
                 .ToList();
 
-            return Task.FromResult<IList<IMetaField>>(metaFields);
+            return Task.FromResult<IList<IMetaField>>(metaFields ?? new List<IMetaField>());
         }
     }
 }

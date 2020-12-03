@@ -20,14 +20,14 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.QueryHan
         public Task<IDictionary<string, IList<IMetaField>>> HandleAsync(FetchMetaFieldsByParentIdsQuery query)
         {
             var metaFieldMap = _inMemoryMetaFieldProvider
-                .MetaFields
+                .MetaFields?
                 .Where(c => query.ParentIds.Contains(c.ParentId))
                 .GroupBy(x => x.ParentId)
                 .ToDictionary(
                     k => k.Key,
                     v => (IList<IMetaField>)v.ToList());
 
-            return Task.FromResult<IDictionary<string, IList<IMetaField>>>(metaFieldMap);
+            return Task.FromResult<IDictionary<string, IList<IMetaField>>>(metaFieldMap ?? new Dictionary<string, IList<IMetaField>>());
         }
     }
 }

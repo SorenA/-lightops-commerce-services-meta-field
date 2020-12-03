@@ -14,26 +14,20 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Configuration
 
         public IReadOnlyList<ServiceRegistration> GetServiceRegistrations()
         {
-            // Populate in-memory providers
-            _providers[Providers.InMemoryMetaFieldProvider].ImplementationInstance = new InMemoryMetaFieldProvider
-            {
-                MetaFields = _metaFields,
-            };
-
             return new List<ServiceRegistration>()
                 .Union(_providers.Values)
                 .ToList();
         }
 
         #region Entities
-        private readonly IList<IMetaField> _metaFields = new List<IMetaField>();
-
         public IInMemoryMetaFieldServiceBackendComponent UseMetaFields(IList<IMetaField> metaFields)
         {
-            foreach (var metaField in metaFields)
+            // Populate in-memory providers
+            _providers[Providers.InMemoryMetaFieldProvider].ImplementationType = null;
+            _providers[Providers.InMemoryMetaFieldProvider].ImplementationInstance = new InMemoryMetaFieldProvider
             {
-                _metaFields.Add(metaField);
-            }
+                MetaFields = metaFields,
+            };
 
             return this;
         }
@@ -47,8 +41,15 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Configuration
 
         private readonly Dictionary<Providers, ServiceRegistration> _providers = new Dictionary<Providers, ServiceRegistration>()
         {
-            [Providers.InMemoryMetaFieldProvider] = ServiceRegistration.Singleton<IInMemoryMetaFieldProvider>(),
+            [Providers.InMemoryMetaFieldProvider] = ServiceRegistration.Singleton<IInMemoryMetaFieldProvider, InMemoryMetaFieldProvider>(),
         };
+
+        public IInMemoryMetaFieldServiceBackendComponent OverrideMetaFieldProvider<T>() where T : IInMemoryMetaFieldProvider
+        {
+            _providers[Providers.InMemoryMetaFieldProvider].ImplementationInstance = null;
+            _providers[Providers.InMemoryMetaFieldProvider].ImplementationType = typeof(T);
+            return this;
+        }
         #endregion Providers
     }
 }

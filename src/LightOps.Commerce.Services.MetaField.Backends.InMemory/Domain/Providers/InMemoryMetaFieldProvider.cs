@@ -6,6 +6,6 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.Provider
 {
     public class InMemoryMetaFieldProvider : IInMemoryMetaFieldProvider
     {
-        public IList<IMetaField> MetaFields { get; internal set; }
+        public IList<IMetaField> MetaFields { get; internal set; } = new List<IMetaField>();
     }
 }
