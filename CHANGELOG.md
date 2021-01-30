@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2021-01-31
+
+### Changed
+
+- **Breaking** - Change protobuf service namespace to prevent message clashes when using multiple services
+
 ## [0.4.0] - 2021-01-30
 
 ### Added
@@ -66,7 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Health service using CQRS for status checks
 - In-memory backend providing default query handlers
 
-[unreleased]: https://github.com/SorenA/lightops-commerce-services-meta-field/compare/0.4.0...develop
+[unreleased]: https://github.com/SorenA/lightops-commerce-services-meta-field/compare/0.4.1...develop
+[0.4.1]: https://github.com/SorenA/lightops-commerce-services-meta-field/tree/0.4.1
 [0.4.0]: https://github.com/SorenA/lightops-commerce-services-meta-field/tree/0.4.0
 [0.3.1]: https://github.com/SorenA/lightops-commerce-services-meta-field/tree/0.3.1
 [0.3.0]: https://github.com/SorenA/lightops-commerce-services-meta-field/tree/0.3.0
