@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2021-01-30
+
+### Added
+
+- Persist and delete meta-field commands
+- In-memory backend persist and delete command handlers
+
+### Changed
+
+- **Breaking** - Migrated to .NET 5
+- **Breaking** - Updated refactored and renamed service definition
+- **Breaking** - Refactored health check query
+- Use Protobuf generated models and services directly instead of mapping and re-implementing services, cuts code required by a lot
+
+### Removed
+
+- **Breaking** - Local entity interfaces, models and mappers, no longer needed
+- **Breaking** - MetaFieldService and HealthService
+
 ## [0.3.1] - 2020-12-03
 
 ### Changed
@@ -47,7 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Health service using CQRS for status checks
 - In-memory backend providing default query handlers
 
-[unreleased]: https://github.com/SorenA/lightops-commerce-services-meta-field/compare/0.3.1...develop
+[unreleased]: https://github.com/SorenA/lightops-commerce-services-meta-field/compare/0.4.0...develop
+[0.4.0]: https://github.com/SorenA/lightops-commerce-services-meta-field/tree/0.4.0
 [0.3.1]: https://github.com/SorenA/lightops-commerce-services-meta-field/tree/0.3.1
 [0.3.0]: https://github.com/SorenA/lightops-commerce-services-meta-field/tree/0.3.0
 [0.2.0]: https://github.com/SorenA/lightops-commerce-services-meta-field/tree/0.2.0
