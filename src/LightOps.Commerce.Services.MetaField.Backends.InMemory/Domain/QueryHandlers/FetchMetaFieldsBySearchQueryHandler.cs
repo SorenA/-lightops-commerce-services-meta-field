@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LightOps.Commerce.Services.MetaField.Api.Models;
 using LightOps.Commerce.Services.MetaField.Api.Queries;
 using LightOps.Commerce.Services.MetaField.Api.QueryHandlers;
 using LightOps.Commerce.Services.MetaField.Backends.InMemory.Api.Providers;
@@ -17,11 +16,11 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.QueryHan
             _inMemoryMetaFieldProvider = inMemoryMetaFieldProvider;
         }
 
-        public Task<IList<IMetaField>> HandleAsync(FetchMetaFieldsBySearchQuery query)
+        public Task<IList<Proto.Types.MetaField>> HandleAsync(FetchMetaFieldsBySearchQuery query)
         {
             var inMemoryQuery = _inMemoryMetaFieldProvider
                 .MetaFields?
-                .AsQueryable() ?? new EnumerableQuery<IMetaField>(new List<IMetaField>());
+                .AsQueryable() ?? new EnumerableQuery<Proto.Types.MetaField>(new List<Proto.Types.MetaField>());
 
             // Match parent id if requested
             if (!string.IsNullOrEmpty(query.ParentId))
@@ -52,7 +51,7 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.QueryHan
             var results = inMemoryQuery
                 .ToList();
 
-            return Task.FromResult<IList<IMetaField>>(results);
+            return Task.FromResult<IList<Proto.Types.MetaField>>(results);
         }
     }
 }

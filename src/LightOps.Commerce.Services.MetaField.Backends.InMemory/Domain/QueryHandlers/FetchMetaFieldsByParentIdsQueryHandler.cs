@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LightOps.Commerce.Services.MetaField.Api.Models;
 using LightOps.Commerce.Services.MetaField.Api.Queries;
 using LightOps.Commerce.Services.MetaField.Api.QueryHandlers;
 using LightOps.Commerce.Services.MetaField.Backends.InMemory.Api.Providers;
@@ -17,7 +16,7 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.QueryHan
             _inMemoryMetaFieldProvider = inMemoryMetaFieldProvider;
         }
 
-        public Task<IDictionary<string, IList<IMetaField>>> HandleAsync(FetchMetaFieldsByParentIdsQuery query)
+        public Task<IDictionary<string, IList<Proto.Types.MetaField>>> HandleAsync(FetchMetaFieldsByParentIdsQuery query)
         {
             var metaFieldMap = _inMemoryMetaFieldProvider
                 .MetaFields?
@@ -25,9 +24,9 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.QueryHan
                 .GroupBy(x => x.ParentId)
                 .ToDictionary(
                     k => k.Key,
-                    v => (IList<IMetaField>)v.ToList());
+                    v => (IList<Proto.Types.MetaField>)v.ToList());
 
-            return Task.FromResult<IDictionary<string, IList<IMetaField>>>(metaFieldMap ?? new Dictionary<string, IList<IMetaField>>());
+            return Task.FromResult<IDictionary<string, IList<Proto.Types.MetaField>>>(metaFieldMap ?? new Dictionary<string, IList<Proto.Types.MetaField>>());
         }
     }
 }

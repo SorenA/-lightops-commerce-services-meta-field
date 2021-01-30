@@ -2,7 +2,7 @@
 
 namespace LightOps.Commerce.Services.MetaField.Api.Queries
 {
-    public class CheckMetaFieldHealthQuery : IQuery
+    public class CheckMetaFieldServiceHealthQuery : IQuery
     {
 
     }

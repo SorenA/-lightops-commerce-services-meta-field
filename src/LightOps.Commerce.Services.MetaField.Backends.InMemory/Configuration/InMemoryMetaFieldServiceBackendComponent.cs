@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LightOps.Commerce.Services.MetaField.Api.Models;
 using LightOps.Commerce.Services.MetaField.Backends.InMemory.Api.Providers;
 using LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.Providers;
 using LightOps.DependencyInjection.Api.Configuration;
@@ -20,7 +19,7 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Configuration
         }
 
         #region Entities
-        public IInMemoryMetaFieldServiceBackendComponent UseMetaFields(IList<IMetaField> metaFields)
+        public IInMemoryMetaFieldServiceBackendComponent UseMetaFields(IList<Proto.Types.MetaField> metaFields)
         {
             // Populate in-memory providers
             _providers[Providers.InMemoryMetaFieldProvider].ImplementationType = null;

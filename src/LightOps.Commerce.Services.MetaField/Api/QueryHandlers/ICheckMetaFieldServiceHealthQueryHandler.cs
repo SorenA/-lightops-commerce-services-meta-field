@@ -4,7 +4,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace LightOps.Commerce.Services.MetaField.Api.QueryHandlers
 {
-    public interface ICheckMetaFieldHealthQueryHandler : IQueryHandler<CheckMetaFieldHealthQuery, HealthStatus>
+    public interface ICheckMetaFieldServiceHealthQueryHandler : IQueryHandler<CheckMetaFieldServiceHealthQuery, HealthStatus>
     {
 
     }

@@ -17,9 +17,9 @@ Provides gRPC services for integrations into other services.
 
 Protobuf service definitions located at [SorenA/lightops-commerce-proto](https://github.com/SorenA/lightops-commerce-proto).
 
-Meta Field is implemented in `Domain.Services.Grpc.MetaFieldGrpcService`.
+Meta Field is implemented in `Domain.GrpcServices.MetaFieldGrpcService`.
 
-Health is implemented in `Domain.Services.Grpc.HealthGrpcService`.
+Health is implemented in `Domain.GrpcServices.HealthGrpcService`.
 
 ### Health-check
 
@@ -29,7 +29,7 @@ Available services are as follows
 
 ```bash
 service = '' - System as a whole
-service = 'lightops.service.MetaFieldProtoService' - MetaFieldPage
+service = 'lightops.service.MetaFieldService' - MetaField
 ```
 
 For embedding a gRPC client for use with Kubernetes, see [grpc-ecosystem/grpc-health-probe](https://github.com/grpc-ecosystem/grpc-health-probe)
@@ -44,7 +44,6 @@ LightOps packages available on NuGet:
 
 - `LightOps.DependencyInjection`
 - `LightOps.CQRS`
-- `LightOps.Mapping`
 
 ## Using the service component
 
@@ -54,7 +53,6 @@ Register during startup through the `AddMetaFieldService(options)` extension on 
 services.AddLightOpsDependencyInjection(root =>
 {
     root
-        .AddMapping()
         .AddCqrs()
         .AddMetaFieldService(service =>
         {
@@ -78,9 +76,11 @@ app.UseEndpoints(endpoints =>
 });
 ```
 
+The gRPC services use `ICommandDispatcher` & `IQueryDispatcher` from the `LightOps.CQRS` package to dispatch commands and queries, see configuration bellow.
+
 ### Configuration options
 
-A component backend is required, defining the query handlers tied to a data-source, see **Query handlers** section bellow for more.
+A component backend is required, implementing the command & query handlers tied to a data-source, see configuration overridables bellow.
 
 A custom backend, or one of the following standard backends can be used:
 
@@ -93,27 +93,19 @@ Using the `IMetaFieldServiceComponent` configuration, the following can be overr
 ```csharp
 public interface IMetaFieldServiceComponent
 {
-    #region Services
-    IMetaFieldServiceComponent OverrideHealthService<T>() where T : IHealthService;
-    IMetaFieldServiceComponent OverrideMetaFieldService<T>() where T : IMetaFieldService;
-    #endregion Services
-
-    #region Mappers
-    IMetaFieldServiceComponent OverrideMetaFieldProtoMapper<T>() where T : IMapper<IMetaField, MetaFieldProto>;
-    #endregion Mappers
-
     #region Query Handlers
-    IMetaFieldServiceComponent OverrideCheckMetaFieldHealthQueryHandler<T>() where T : ICheckMetaFieldHealthQueryHandler;
+    IMetaFieldServiceComponent OverrideCheckMetaFieldServiceHealthQueryHandler<T>() where T : ICheckMetaFieldServiceHealthQueryHandler;
     IMetaFieldServiceComponent OverrideFetchMetaFieldsByIdsQueryHandler<T>() where T : IFetchMetaFieldsByIdsQueryHandler;
     IMetaFieldServiceComponent OverrideFetchMetaFieldsByParentIdsQueryHandler<T>() where T : IFetchMetaFieldsByParentIdsQueryHandler;
     IMetaFieldServiceComponent OverrideFetchMetaFieldsBySearchQueryHandler<T>() where T : IFetchMetaFieldsBySearchQueryHandler;
     #endregion Query Handlers
+
+    #region Command Handlers
+    IMetaFieldServiceComponent OverridePersistMetaFieldCommandHandler<T>() where T : IPersistMetaFieldCommandHandler;
+    IMetaFieldServiceComponent OverrideDeleteMetaFieldCommandHandler<T>() where T : IDeleteMetaFieldCommandHandler;
+    #endregion Command Handlers
 }
 ```
-
-`IMetaFieldService` is used by the gRPC services and query the data using the `IQueryDispatcher` from the `LightOps.CQRS` package.
-
-The mappers are used for mapping the internal data structure to the versioned protobuf messages.
 
 ## Backend modules
 
@@ -126,7 +118,7 @@ root.AddMetaFieldService(service =>
 {
     service.UseInMemoryBackend(root, backend =>
     {
-        var metaFields = new List<IMetaFields>();
+        var metaFields = new List<MetaField>();
         // ...
 
         backend.UseMetaFields(metaFields);

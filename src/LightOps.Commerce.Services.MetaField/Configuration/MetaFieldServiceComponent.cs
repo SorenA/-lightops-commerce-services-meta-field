@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LightOps.Commerce.Proto.Types;
-using LightOps.Commerce.Services.MetaField.Api.Models;
+using LightOps.Commerce.Services.MetaField.Api.CommandHandlers;
+using LightOps.Commerce.Services.MetaField.Api.Commands;
 using LightOps.Commerce.Services.MetaField.Api.Queries;
 using LightOps.Commerce.Services.MetaField.Api.QueryHandlers;
-using LightOps.Commerce.Services.MetaField.Api.Services;
-using LightOps.Commerce.Services.MetaField.Domain.Mappers;
-using LightOps.Commerce.Services.MetaField.Domain.Services;
+using LightOps.CQRS.Api.Commands;
 using LightOps.CQRS.Api.Queries;
 using LightOps.DependencyInjection.Api.Configuration;
 using LightOps.DependencyInjection.Domain.Configuration;
-using LightOps.Mapping.Api.Mappers;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace LightOps.Commerce.Services.MetaField.Configuration
@@ -22,62 +19,15 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
         public IReadOnlyList<ServiceRegistration> GetServiceRegistrations()
         {
             return new List<ServiceRegistration>()
-                .Union(_services.Values)
-                .Union(_mappers.Values)
                 .Union(_queryHandlers.Values)
+                .Union(_commandHandlers.Values)
                 .ToList();
         }
-
-        #region Services
-        internal enum Services
-        {
-            HealthService,
-            MetaFieldService,
-        }
-
-        private readonly Dictionary<Services, ServiceRegistration> _services = new Dictionary<Services, ServiceRegistration>
-        {
-            [Services.HealthService] = ServiceRegistration.Transient<IHealthService, HealthService>(),
-            [Services.MetaFieldService] = ServiceRegistration.Transient<IMetaFieldService, MetaFieldService>(),
-        };
-
-        public IMetaFieldServiceComponent OverrideHealthService<T>()
-            where T : IHealthService
-        {
-            _services[Services.HealthService].ImplementationType = typeof(T);
-            return this;
-        }
-
-        public IMetaFieldServiceComponent OverrideMetaFieldService<T>()
-            where T : IMetaFieldService
-        {
-            _services[Services.MetaFieldService].ImplementationType = typeof(T);
-            return this;
-        }
-        #endregion Services
-
-        #region Mappers
-        internal enum Mappers
-        {
-            MetaFieldProtoMapper,
-        }
-
-        private readonly Dictionary<Mappers, ServiceRegistration> _mappers = new Dictionary<Mappers, ServiceRegistration>
-        {
-            [Mappers.MetaFieldProtoMapper] = ServiceRegistration.Transient<IMapper<IMetaField, MetaFieldProto>, MetaFieldProtoMapper>(),
-        };
-
-        public IMetaFieldServiceComponent OverrideMetaFieldProtoMapper<T>() where T : IMapper<IMetaField, MetaFieldProto>
-        {
-            _mappers[Mappers.MetaFieldProtoMapper].ImplementationType = typeof(T);
-            return this;
-        }
-        #endregion Mappers
 
         #region Query Handlers
         internal enum QueryHandlers
         {
-            CheckMetaFieldHealthQueryHandler,
+            CheckMetaFieldServiceHealthQueryHandler,
             FetchMetaFieldsByIdsQueryHandler,
             FetchMetaFieldsByParentIdsQueryHandler,
             FetchMetaFieldsBySearchQueryHandler,
@@ -85,15 +35,15 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
 
         private readonly Dictionary<QueryHandlers, ServiceRegistration> _queryHandlers = new Dictionary<QueryHandlers, ServiceRegistration>
         {
-            [QueryHandlers.CheckMetaFieldHealthQueryHandler] = ServiceRegistration.Transient<IQueryHandler<CheckMetaFieldHealthQuery, HealthStatus>>(),
-            [QueryHandlers.FetchMetaFieldsByIdsQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByIdsQuery, IList<IMetaField>>>(),
-            [QueryHandlers.FetchMetaFieldsByParentIdsQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByParentIdsQuery, IDictionary<string, IList<IMetaField>>>>(),
-            [QueryHandlers.FetchMetaFieldsBySearchQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsBySearchQuery, IList<IMetaField>>>(),
+            [QueryHandlers.CheckMetaFieldServiceHealthQueryHandler] = ServiceRegistration.Transient<IQueryHandler<CheckMetaFieldServiceHealthQuery, HealthStatus>>(),
+            [QueryHandlers.FetchMetaFieldsByIdsQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByIdsQuery, IList<Proto.Types.MetaField>>>(),
+            [QueryHandlers.FetchMetaFieldsByParentIdsQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsByParentIdsQuery, IDictionary<string, IList<Proto.Types.MetaField>>>>(),
+            [QueryHandlers.FetchMetaFieldsBySearchQueryHandler] = ServiceRegistration.Transient<IQueryHandler<FetchMetaFieldsBySearchQuery, IList<Proto.Types.MetaField>>>(),
         };
 
-        public IMetaFieldServiceComponent OverrideCheckMetaFieldHealthQueryHandler<T>() where T : ICheckMetaFieldHealthQueryHandler
+        public IMetaFieldServiceComponent OverrideCheckMetaFieldServiceHealthQueryHandler<T>() where T : ICheckMetaFieldServiceHealthQueryHandler
         {
-            _queryHandlers[QueryHandlers.CheckMetaFieldHealthQueryHandler].ImplementationType = typeof(T);
+            _queryHandlers[QueryHandlers.CheckMetaFieldServiceHealthQueryHandler].ImplementationType = typeof(T);
             return this;
         }
 
@@ -115,5 +65,31 @@ namespace LightOps.Commerce.Services.MetaField.Configuration
             return this;
         }
         #endregion Query Handlers
+
+        #region Command Handlers
+        internal enum CommandHandlers
+        {
+            PersistMetaFieldCommandHandler,
+            DeleteMetaFieldCommandHandler,
+        }
+
+        private readonly Dictionary<CommandHandlers, ServiceRegistration> _commandHandlers = new Dictionary<CommandHandlers, ServiceRegistration>
+        {
+            [CommandHandlers.PersistMetaFieldCommandHandler] = ServiceRegistration.Transient<ICommandHandler<PersistMetaFieldCommand>>(),
+            [CommandHandlers.DeleteMetaFieldCommandHandler] = ServiceRegistration.Transient<ICommandHandler<DeleteMetaFieldCommand>>(),
+        };
+
+        public IMetaFieldServiceComponent OverridePersistMetaFieldCommandHandler<T>() where T : IPersistMetaFieldCommandHandler
+        {
+            _commandHandlers[CommandHandlers.PersistMetaFieldCommandHandler].ImplementationType = typeof(T);
+            return this;
+        }
+
+        public IMetaFieldServiceComponent OverrideDeleteMetaFieldCommandHandler<T>() where T : IDeleteMetaFieldCommandHandler
+        {
+            _commandHandlers[CommandHandlers.DeleteMetaFieldCommandHandler].ImplementationType = typeof(T);
+            return this;
+        }
+        #endregion Command Handlers
     }
 }

@@ -6,16 +6,16 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.QueryHandlers
 {
-    public class CheckMetaFieldHealthQueryHandler : ICheckMetaFieldHealthQueryHandler
+    public class CheckMetaFieldServiceHealthQueryHandler : ICheckMetaFieldServiceHealthQueryHandler
     {
         private readonly IInMemoryMetaFieldProvider _inMemoryMetaFieldProvider;
 
-        public CheckMetaFieldHealthQueryHandler(IInMemoryMetaFieldProvider inMemoryMetaFieldProvider)
+        public CheckMetaFieldServiceHealthQueryHandler(IInMemoryMetaFieldProvider inMemoryMetaFieldProvider)
         {
             _inMemoryMetaFieldProvider = inMemoryMetaFieldProvider;
         }
 
-        public Task<HealthStatus> HandleAsync(CheckMetaFieldHealthQuery query)
+        public Task<HealthStatus> HandleAsync(CheckMetaFieldServiceHealthQuery query)
         {
             return _inMemoryMetaFieldProvider.MetaFields != null
                 ? Task.FromResult(HealthStatus.Healthy)

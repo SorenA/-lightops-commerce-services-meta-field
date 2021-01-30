@@ -3,23 +3,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using LightOps.Commerce.Proto.Grpc.Health;
-using LightOps.Commerce.Services.MetaField.Api.Services;
+using LightOps.Commerce.Services.MetaField.Api.Queries;
+using LightOps.CQRS.Api.Services;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 
-namespace LightOps.Commerce.Services.MetaField.Domain.Services.Grpc
+namespace LightOps.Commerce.Services.MetaField.Domain.GrpcServices
 {
     public class HealthGrpcService : Health.HealthBase
     {
         private readonly ILogger<HealthGrpcService> _logger;
-        private readonly IHealthService _healthService;
+        private readonly IQueryDispatcher _queryDispatcher;
 
         public HealthGrpcService(
             ILogger<HealthGrpcService> logger,
-            IHealthService healthService)
+            IQueryDispatcher queryDispatcher)
         {
             _logger = logger;
-            _healthService = healthService;
+            _queryDispatcher = queryDispatcher;
         }
 
         public override async Task<HealthCheckResponse> Check(HealthCheckRequest request, ServerCallContext context)
@@ -27,10 +28,11 @@ namespace LightOps.Commerce.Services.MetaField.Domain.Services.Grpc
             if (string.IsNullOrEmpty(request.Service))
             {
                 // Perform overall health-check
-                var statusMap = new Dictionary<string, HealthCheckResponse.Types.ServingStatus>();
-
-                // Check all services
-                statusMap.Add("lightops.service.MetaFieldProtoService", await GetMetaFieldServiceStatusAsync());
+                var statusMap = new Dictionary<string, HealthCheckResponse.Types.ServingStatus>
+                {
+                    // Check all services
+                    { "lightops.service.MetaFieldService", await GetMetaFieldServiceStatusAsync() },
+                };
 
                 return new HealthCheckResponse
                 {
@@ -43,7 +45,7 @@ namespace LightOps.Commerce.Services.MetaField.Domain.Services.Grpc
             var servingStatus = HealthCheckResponse.Types.ServingStatus.Unknown;
             switch (request.Service)
             {
-                case "lightops.service.MetaFieldProtoService":
+                case "lightops.service.MetaFieldService":
                     servingStatus = await GetMetaFieldServiceStatusAsync();
                     break;
                 default:
@@ -58,7 +60,9 @@ namespace LightOps.Commerce.Services.MetaField.Domain.Services.Grpc
 
         private async Task<HealthCheckResponse.Types.ServingStatus> GetMetaFieldServiceStatusAsync()
         {
-            return await _healthService.CheckMetaField() == HealthStatus.Healthy
+            var healthStatus = await _queryDispatcher.DispatchAsync<CheckMetaFieldServiceHealthQuery, HealthStatus>(new CheckMetaFieldServiceHealthQuery());
+
+            return healthStatus == HealthStatus.Healthy
                 ? HealthCheckResponse.Types.ServingStatus.Serving
                 : HealthCheckResponse.Types.ServingStatus.NotServing;
         }

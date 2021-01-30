@@ -1,4 +1,5 @@
 ﻿using System;
+using LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.CommandHandlers;
 using LightOps.Commerce.Services.MetaField.Backends.InMemory.Domain.QueryHandlers;
 using LightOps.Commerce.Services.MetaField.Configuration;
 using LightOps.DependencyInjection.Configuration;
@@ -20,9 +21,14 @@ namespace LightOps.Commerce.Services.MetaField.Backends.InMemory.Configuration
             // Attach to root component
             rootComponent.AttachComponent(component);
 
+            // Override command handlers
+            serviceComponent
+                .OverridePersistMetaFieldCommandHandler<PersistMetaFieldCommandHandler>()
+                .OverrideDeleteMetaFieldCommandHandler<DeleteMetaFieldCommandHandler>();
+
             // Override query handlers
             serviceComponent
-                .OverrideCheckMetaFieldHealthQueryHandler<CheckMetaFieldHealthQueryHandler>()
+                .OverrideCheckMetaFieldServiceHealthQueryHandler<CheckMetaFieldServiceHealthQueryHandler>()
                 .OverrideFetchMetaFieldsByIdsQueryHandler<FetchMetaFieldsByIdsQueryHandler>()
                 .OverrideFetchMetaFieldsByParentIdsQueryHandler<FetchMetaFieldsByParentIdsQueryHandler>()
                 .OverrideFetchMetaFieldsBySearchQueryHandler<FetchMetaFieldsBySearchQueryHandler>();
